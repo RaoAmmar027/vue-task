@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "vee-validate": "^4.14.7",
+    "vuex": "^4.1.0",
+    "yup": "^1.4.0"
+  }
+}
