@@ -8,6 +8,7 @@ const props = defineProps({
 const emits = defineEmits(['edit', 'delete']);
 
 const handleEdit = (index) => {
+    console.log("Edit button clicked for index:", index);
   emits('edit', index);
 };
 
