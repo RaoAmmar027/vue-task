@@ -1,6 +1,6 @@
-import { createStore } from 'vuex';
+import { createStore } from 'vuex'
 
-const store = createStore({
+export const store = createStore({
   state: {
     users: [],
   },
@@ -14,11 +14,4 @@ const store = createStore({
       commit('ADD_USER', user);
     },
   },
-  getters: {
-    getUsers(state) {
-      return state.users;
-    },
-  },
 });
-
-export default store;

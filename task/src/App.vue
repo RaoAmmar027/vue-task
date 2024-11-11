@@ -1,11 +1,10 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import UserForm from './components/UserForm.vue';
+import FormSetup from './components/FormSetup.vue';
 </script>
 
 <template>
-   <UserForm/>
-
+<FormSetup/>
   <!-- <RouterView /> -->
 </template>
 
