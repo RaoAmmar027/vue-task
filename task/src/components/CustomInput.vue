@@ -1,3 +1,37 @@
+    <script setup>
+    import { ref, defineProps, defineEmits, watchEffect } from 'vue'
+    import { useField } from 'vee-validate'
+    
+    const props = defineProps({
+      name: {
+        type: String,
+        required: true
+      },
+      type: {
+        type: String,
+        default: 'text'
+      },
+      inputVal:{
+        type:String,
+        default:''
+      },
+      placeholder: String,
+      label: String
+    })
+    
+    const emit = defineEmits(['update:modelValue'])
+    
+    const { value: inputValue, errorMessage, meta } = useField(props.name)
+    
+    // Emit the input value to the parent component
+    // const updateValue = () => {
+    //   console.log('inputValue.value :>> ', inputValue.value);
+    //   emit('update:modelValue', inputValue.value)
+    // }
+    watchEffect(()=>{
+      inputValue.value = props.inputVal || ' '
+    })
+    </script>
 <template>
   <div class="wrapper">
     <label v-if="label" :for="name">{{ label }}</label>
@@ -14,40 +48,6 @@
   </div>
 </template>
 
-<script setup>
-import { ref, defineProps, defineEmits, watchEffect } from 'vue'
-import { useField } from 'vee-validate'
-
-const props = defineProps({
-  name: {
-    type: String,
-    required: true
-  },
-  type: {
-    type: String,
-    default: 'text'
-  },
-  inputVal:{
-    type:String,
-    default:''
-  },
-  placeholder: String,
-  label: String
-})
-
-const emit = defineEmits(['update:modelValue'])
-
-const { value: inputValue, errorMessage, meta } = useField(props.name)
-
-// Emit the input value to the parent component
-// const updateValue = () => {
-//   console.log('inputValue.value :>> ', inputValue.value);
-//   emit('update:modelValue', inputValue.value)
-// }
-watchEffect(()=>{
-  inputValue.value = props.inputVal || ' '
-})
-</script>
 
 <style scoped>
 .wrapper {
