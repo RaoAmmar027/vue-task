@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, watchEffect } from 'vue'
 import { useField } from 'vee-validate'
 
 const props = defineProps({
@@ -27,6 +27,10 @@ const props = defineProps({
     type: String,
     default: 'text'
   },
+  inputVal:{
+    type:String,
+    default:''
+  },
   placeholder: String,
   label: String
 })
@@ -36,9 +40,13 @@ const emit = defineEmits(['update:modelValue'])
 const { value: inputValue, errorMessage, meta } = useField(props.name)
 
 // Emit the input value to the parent component
-const updateValue = () => {
-  emit('update:modelValue', inputValue.value)
-}
+// const updateValue = () => {
+//   console.log('inputValue.value :>> ', inputValue.value);
+//   emit('update:modelValue', inputValue.value)
+// }
+watchEffect(()=>{
+  inputValue.value = props.inputVal || ' '
+})
 </script>
 
 <style scoped>

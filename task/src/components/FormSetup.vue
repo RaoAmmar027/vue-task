@@ -1,13 +1,14 @@
 <template>
     <div class="container">
-      <Form ref="form" :validation-schema="schema" @submit="submit" :initial-values="formData">
-        <CustomInput v-model="formData.name" placeholder="Full Name" label="Full Name" name="name" type="text" />
-        <CustomInput v-model="formData.email" placeholder="Email" label="Email" name="email" type="email" />
-        <CustomInput v-model="formData.job_type" placeholder="Job Type" label="Job Type" name="job_type" />
-        <CustomInput v-model="formData.customer_name" placeholder="Customer Name" label="Customer Name" name="customer_name" />
+      <Form ref="form" @submit="submit" :validation-schema="schema" >
+        <CustomInput  :inputVal="formData.name" v-model="formData.name" placeholder="Full Name" label="Full Name" name="name" type="text" />
+        <CustomInput  :inputVal="formData.email" v-model="formData.email" placeholder="Email" label="Email" name="email" type="email" />
+        <CustomInput  :inputVal="formData.job_type" v-model="formData.job_type" placeholder="Job Type" label="Job Type" name="job_type" />
+        <CustomInput  :inputVal="formData.customer_name" v-model="formData.customer_name" placeholder="Customer Name" label="Customer Name" name="customer_name" />
   
+        {{ formData.name }}
         <div class="button-wrapper">
-          <button class="btn btn-success" type="submit">Submit</button>
+          <button   class="btn btn-success" type="submit">Submit</button>
           <button @click="reset" class="btn btn-danger" type="button">Reset</button>
         </div>
       </Form>
@@ -21,7 +22,7 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { nextTick, ref } from 'vue'
   import { Form } from 'vee-validate'
   import * as yup from 'yup'
   import CustomInput from '@/components/CustomInput.vue'
@@ -46,6 +47,7 @@
   })
   
   const submit = (values) => {
+    console.log('values :>> ', formData);
     if (isEditing.value) {
       // Update the existing entry
       submittedValues.value[editIndex.value] = values
@@ -65,10 +67,16 @@
   }
   
   const handleEdit = (index) => {
+    console.log('index :>> ', index);
     const entry = submittedValues.value[index]
-    formData.value = { ...entry } // Fill the form with the selected entry
+    console.log('entry :>> ', entry);
+    nextTick(()=>formData.value = { ...entry })
+    // formData.value = { ...entry } // Fill the form with the selected entry
+    console.log('formData.value :>> ', formData.value);
     isEditing.value = true // Set editing state
+    console.log('isEditing.value :>> ', isEditing.value);
     editIndex.value = index // Save the index of the entry being edited
+    console.log('editIndex.value :>> ', editIndex.value);
   }
   
   const handleDelete = (index) => {
