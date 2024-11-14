@@ -8,6 +8,7 @@ import {
     DeleteUserById,
     getAllUsers
 } from '../../api';
+import AddUser from './AddUser.vue';
 
 // Define a reactive object to hold user data
 const users = ref([])
@@ -40,7 +41,10 @@ if(response.status === 200){
 
 </script>
 <template>
-    
+    <div>
+
+        <AddUser/>
+    </div>
 <div class="flexed">
     <div v-if="users.length>0" v-for="user in users" :key="user.id" >
         <img :src="user.profilePicture" :alt="user.firstName" width="150" />
@@ -75,7 +79,7 @@ if(response.status === 200){
 .flexed{
     display: flex;
     flex-wrap: wrap;
-    width: 100rem;
+    width: 90rem;
     padding: 0%;
     box-sizing: border-box;
     margin: 0%;
