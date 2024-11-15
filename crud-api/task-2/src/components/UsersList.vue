@@ -1,6 +1,6 @@
 <script setup>
 import {
-    reactive,
+    
     ref, 
     onMounted
 } from 'vue'
@@ -10,10 +10,8 @@ import {
 } from '../../api';
 import AddUser from './AddUser.vue';
 
-// Define a reactive object to hold user data
 const users = ref([])
 
-// Function to fetch user data from the API
 const doGetAllUsers = async () => {
 
     users.value = await getAllUsers();
@@ -21,7 +19,6 @@ const doGetAllUsers = async () => {
 
 };
 
-// Fetch user data when the component is mounted
 onMounted(() => {
     console.log('onMounted')
     doGetAllUsers()
@@ -46,8 +43,7 @@ if(response.status === 200){
         <AddUser/>
     </div>
 <div class="flexed">
-    <div v-if="users.length>0" v-for="user in users" :key="user.id" >
-        <img :src="user.profilePicture" :alt="user.firstName" width="150" />
+    <div v-if="users.length>0" v-for="user in users" :key="user.id" class="bordered">
         <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Age:</strong> {{ user.age }}</p>
@@ -57,12 +53,6 @@ if(response.status === 200){
         <p><strong>Phone:</strong> {{ user.phone }}</p>
         <p><strong>Occupation:</strong> {{ user.occupation }}</p>
         <p><strong>Company:</strong> {{ user.company }}</p>
-        <p><strong>Bio:</strong> {{ user.bio }}</p>
-        <p><strong>Interests:</strong> {{ user.interests.join(', ') }}</p>
-        <p><strong>Last Login:</strong> {{ user.lastLoginDate }}</p>
-        <p><strong>Status:</strong> {{ user.isActive ? 'Active' : 'Inactive' }}</p>
-        <p><strong>Roles:</strong> {{ user.roles.join(', ') }}</p>
-
         <div>
             <button @click="deleteUser(user.id)">Delete User</button>
         </div>
@@ -75,11 +65,17 @@ if(response.status === 200){
 
   
 <style scoped>
-
+.bordered{
+    padding: 1rem;
+    border: 2px solid black;
+    width: 20rem;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
 .flexed{
     display: flex;
     flex-wrap: wrap;
-    width: 90rem;
+    width: 118rem;
     padding: 0%;
     box-sizing: border-box;
     margin: 0%;
