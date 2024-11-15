@@ -30,6 +30,18 @@ export const addUsers = async (userData) => {
     console.error('Error adding user:', error);
   }
 };
+export const editUsers = async (id,userData) => {
+  console.log("API called with user data:", userData);
+  try {
+    const response = await axios.put(
+      `https://fake-user-api.up.railway.app/api/v1/users/${id}`,
+      userData // Pass the user data here
+    );
+    return response?.data?.data;
+  } catch (error) {
+    console.error('Error adding user:', error);
+  }
+};
 
 
 

@@ -6,11 +6,14 @@ import {
 } from 'vue'
 import {
     DeleteUserById,
+    editUsers,
     getAllUsers
 } from '../../api';
 import AddUser from './AddUser.vue';
 
 const users = ref([])
+const selectedUser = ref(null) 
+
 
 const doGetAllUsers = async () => {
 
@@ -33,6 +36,10 @@ if(response.status === 200){
     doGetAllUsers()
 }
 }
+const editUser = (user) => {
+    console.log('user :>> ', user);
+    selectedUser.value = user; 
+}
 
 
 
@@ -40,7 +47,7 @@ if(response.status === 200){
 <template>
     <div>
 
-        <AddUser/>
+        <AddUser :userData="selectedUser" @userUpdated="doGetAllUsers" /> <!-- Pass selectedUser to AddUser component -->
     </div>
 <div class="flexed">
     <div v-if="users.length>0" v-for="user in users" :key="user.id" class="bordered">
@@ -55,6 +62,7 @@ if(response.status === 200){
         <p><strong>Company:</strong> {{ user.company }}</p>
         <div>
             <button @click="deleteUser(user.id)">Delete User</button>
+            <button @click="editUser(user)">Edit User</button> <!-- Pass full user object to editUser -->
         </div>
     </div>
     <div v-else>
