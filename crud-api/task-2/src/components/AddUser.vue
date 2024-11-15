@@ -1,101 +1,91 @@
 <script setup>
-import { reactive, watch, toRefs } from 'vue'
-import { addUsers, editUsers } from '../../api';
+import { reactive, watch, toRefs } from "vue";
+import { addUsers, editUsers } from "../../api";
 
 const props = defineProps({
-  userData: Object // Receives user data to be edited
-})
+  userData: Object,
+});
 
-const emit = defineEmits(['userUpdated'])
-
-// Define a reactive object to hold user data
-const user = reactive({
+const emit = defineEmits(["userUpdated"]);
+const obj = {
   firstName: "",
   lastName: "",
   email: "",
-  age: '',
+  age: "",
   gender: "",
   country: "",
   city: "",
   phone: "",
-  username: ""
-})
+  username: "",
+};
+const user = reactive(obj);
 const resetForm = () => {
-  Object.assign(user, {
-    firstName: "",
-    lastName: "",
-    email: "",
-    age: '',
-    gender: "",
-    country: "",
-    city: "",
-    phone: "",
-    username: ""
-  })
-}
-// Watch for changes in userData (props), and populate the form when editing
-watch(() => props.userData, (newVal) => {
-  if (newVal) {
-    Object.assign(user, newVal) // Populate user data into the form
-  } else {
-    // Reset form fields for "Add User" functionality
-    Object.assign(user, {
-      firstName: "",
-      lastName: "",
-      email: "",
-      age: '',
-      gender: "",
-      country: "",
-      city: "",
-      phone: "",
-      username: ""
-    })
-  }
-}, { immediate: true })
+  Object.assign(user, obj);
+};
+watch(
+  () => props.userData,
+  (newVal) => {
+    if (newVal) {
+      Object.assign(user, newVal);
+    } else {
+      Object.assign(user, obj);
+    }
+  },
+  { immediate: true }
+);
 
-// Function to handle form submission
 const submitForm = async () => {
-  const username = `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}`
-  user.username = username // Generate the username
+  const username = `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}`;
+  user.username = username;
 
-  // Check if all required fields are filled
-  if (!user.firstName || !user.lastName || !user.email || !user.phone || !user.age || !user.gender || !user.country || !user.city) {
-    alert("Please fill in all required fields.");
+  const requiredFields = [
+    "firstName",
+    "lastName",
+    "email",
+    "phone",
+    "age",
+    "gender",
+    "country",
+    "city",
+  ];
+
+  const hasEmptyFields = requiredFields.some(
+    (field) => !user[field] || user[field].trim() === ""
+  );
+  const allFieldsFilled = requiredFields.every(
+    (field) => user[field] && user[field].trim() !== ""
+  );
+
+  if (!allFieldsFilled) {
+    alert("Please fill in all required fields." );
     return;
-  }
-
-  // Prepare the user data
-  const userData = {
-    ...user,
-    username
   }
 
   try {
     let response;
     if (props.userData && props.userData.id) {
-      // If userData is present, this is an edit
-      response = await editUsers(props.userData.id, userData);
+      response = await editUsers(props.userData.id, user);
+      console.log("response while edit :>> ", response);
     } else {
-      // Otherwise, this is a new user
-      response = await addUsers(userData);
+      response = await addUsers(user);
     }
 
-    if (response && response.status === 200) {
-      // Reset the form after a successful submission
+    if (response && response.status === "OK") {
       resetForm();
-      emit('userUpdated'); // Notify the parent to refresh the users list
+      emit("userUpdated");
     }
 
-    console.log('Form submitted with user data:', response);
+    console.log("Form submitted with user data:", response);
   } catch (error) {
-    console.error('Error submitting form:', error);
+    console.error("Error submitting form:", error);
   }
-}
+};
 </script>
 
 <template>
   <div>
-    <h1>{{ props.userData ? 'Edit User' : 'Add User' }}</h1> <!-- Display appropriate title -->
+    <h1>{{ props.userData ? "Edit User" : "Add User" }}</h1>
+    <!-- Display appropriate title -->
     <form @submit.prevent="submitForm">
       <!-- Name -->
       <div>
