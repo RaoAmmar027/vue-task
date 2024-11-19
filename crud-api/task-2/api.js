@@ -51,3 +51,22 @@ export const DeleteUserById = async (id) => {
     console.log("error :>> ", error);
   }
 };
+
+
+
+export const getUserById = async (userId) => {
+  console.log("API called to fetch user with ID:", userId);
+  try {
+    const response = await axios.get(
+      `https://fake-user-api.up.railway.app/api/v1/users`,
+      {
+        params: { userId: userId } // Pass the userId as query param
+      }
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null; // Return null or handle error as needed
+  }
+};

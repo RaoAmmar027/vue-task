@@ -30,10 +30,10 @@ const editUser = (user) => {
 };
 </script>
 <template>
-  <div>
-    <AddUser :userData="selectedUser" @userUpdated="doGetAllUsers" />
+  <!-- <div> -->
+    <!-- <AddUser :userData="selectedUser" @userUpdated="doGetAllUsers" /> -->
     <!-- Pass selectedUser to AddUser component -->
-  </div>
+  <!-- </div> -->
   <div class="flexed">
     <div
       v-if="users.length > 0"
