@@ -7,7 +7,16 @@ export default {
   },
   methods: {
     onSearch() {
-      this.$emit('search', this.query); // Emit the search query (userId)
+      if (this.query.trim() !== '') {
+        // Emit the search query (userId) only if it's not empty
+        this.$emit('search', this.query);
+      }
+    },
+    handleKeyUp(event) {
+      // Trigger search when Enter key (key code 13) is pressed
+      if (event.key === 'Enter' || event.keyCode === 13) {
+        this.onSearch();
+      }
     },
   },
 };
@@ -17,7 +26,7 @@ export default {
   <div class="search-container">
     <input 
       v-model="query" 
-      @input="onSearch" 
+      @keyup="handleKeyUp"  
       type="text" 
       placeholder="Enter User ID"
       class="search-input"

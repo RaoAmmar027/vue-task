@@ -1,7 +1,14 @@
 <script setup>
-import { reactive, watch, toRefs } from "vue";
-import { addUsers, editUsers } from "../../api";
-
+import { reactive, watch, computed } from "vue";
+import { addUsers, DeleteUserById, editUsers } from "../../api";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const pageTitle = computed(() => {
+  if (route.name === 'add-member') return 'Add Member';
+  if (route.name === 'edit-member') return 'Edit Member';
+  if (route.name === 'delete-member') return 'Delete Member';
+  return 'Member'; // Fallback title
+});
 const props = defineProps({
   userData: Object, // Either null (for adding new) or a user object (for editing)
 });
@@ -60,12 +67,19 @@ const submitForm = async () => {
   try {
     let response;
     if (props.userData && props.userData.id) {
-      // Edit mode
-      response = await editUsers(props.userData.id, user);
-      console.log("Editing user response:", response);
+      if (route.name === 'delete-member') {
+        // Delete mode
+        response = await DeleteUserById(props.userData.id);
+        emit("userDeleted"); // Emit delete event
+      } else {
+        // Edit mode
+        response = await editUsers(props.userData.id, user);
+        emit("userUpdated"); // Emit update event
+      }
     } else {
       // Add mode
       response = await addUsers(user);
+      emit("userUpdated");
     }
 
     if (response && response.status === "OK") {
@@ -78,36 +92,42 @@ const submitForm = async () => {
     console.error("Error submitting form:", error);
   }
 };
+
+
+const isFieldDisabled = computed(() => {
+  // Disable the field on specific routes (like 'edit-member' or 'delete-member')
+  return route.name === 'delete-member' 
+});
 </script>
 
 <template>
   <div class="form-container">
-    <h1>{{ props.userData ? "Edit User" : "Add User" }}</h1>
+    <h1>{{ pageTitle }}</h1> 
     <form @submit.prevent="submitForm">
       <!-- Form fields -->
       <div class="form-group">
         <label for="firstName">First Name:</label>
-        <input type="text" v-model="user.firstName" id="firstName" />
+        <input :disabled="isFieldDisabled" type="text" v-model="user.firstName" id="firstName" />
       </div>
 
       <div class="form-group">
         <label for="lastName">Last Name:</label>
-        <input type="text" v-model="user.lastName" id="lastName" />
+        <input  :disabled="isFieldDisabled" type="text" v-model="user.lastName" id="lastName" />
       </div>
 
       <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" v-model="user.email" id="email" />
+        <input :disabled="isFieldDisabled" type="email" v-model="user.email" id="email" />
       </div>
 
       <div class="form-group">
         <label for="age">Age:</label>
-        <input type="number" v-model="user.age" id="age" />
+        <input :disabled="isFieldDisabled" type="number" v-model="user.age" id="age" />
       </div>
 
       <div class="form-group">
         <label for="gender">Gender:</label>
-        <select v-model="user.gender" id="gender">
+        <select :disabled="isFieldDisabled"  v-model="user.gender" id="gender">
           <option value="Male">Male</option>
           <option value="Female">Female</option>
           <option value="Other">Other</option>
@@ -116,20 +136,20 @@ const submitForm = async () => {
 
       <div class="form-group">
         <label for="country">Country:</label>
-        <input type="text" v-model="user.country" id="country" />
+        <input :disabled="isFieldDisabled" type="text" v-model="user.country" id="country" />
       </div>
 
       <div class="form-group">
         <label for="city">City:</label>
-        <input type="text" v-model="user.city" id="city" />
+        <input :disabled="isFieldDisabled" type="text" v-model="user.city" id="city" />
       </div>
 
       <div class="form-group">
         <label for="phone">Phone:</label>
-        <input type="tel" v-model="user.phone" id="phone" />
+        <input :disabled="isFieldDisabled" type="tel" v-model="user.phone" id="phone" />
       </div>
 
-      <button class="submit-button" type="submit">Save Changes</button>
+      <button class="submit-button" type="submit">{{ pageTitle }}</button>
     </form>
   </div>
 </template>

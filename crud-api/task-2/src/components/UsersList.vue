@@ -24,16 +24,10 @@ const deleteUser = async (userId) => {
     doGetAllUsers();
   }
 };
-const editUser = (user) => {
-  console.log("user :>> ", user);
-  selectedUser.value = user;
-};
+
 </script>
 <template>
-  <!-- <div> -->
-    <!-- <AddUser :userData="selectedUser" @userUpdated="doGetAllUsers" /> -->
-    <!-- Pass selectedUser to AddUser component -->
-  <!-- </div> -->
+
   <div class="flexed">
     <div
       v-if="users.length > 0"
@@ -50,10 +44,6 @@ const editUser = (user) => {
       <p><strong>Phone:</strong> {{ user.phone }}</p>
       <p><strong>Occupation:</strong> {{ user.occupation }}</p>
       <p><strong>Company:</strong> {{ user.company }}</p>
-      <div>
-        <button @click="deleteUser(user.id)">Delete User</button>
-        <button @click="editUser(user)">Edit User</button>
-      </div>
     </div>
     <div v-else>
       <p>Loading user data...</p>
